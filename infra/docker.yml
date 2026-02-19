@@ -36,8 +36,6 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: postgres
-    env_file:
-      - ../.env
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     environment:
@@ -59,6 +57,21 @@ services:
     restart: unless-stopped
     mem_limit: ${DOCKER_REDIS_MEM:-128m}
 
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "${ELASTICSEARCH_PORT:-9200}:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+    mem_limit: ${DOCKER_ELASTICSEARCH_MEM:-1g}
+
 volumes:
   postgres_data:
   redis_data:
+  elasticsearch_data:
