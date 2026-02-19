@@ -9,6 +9,8 @@ import { fetchWeather } from '../api/weather.js';
 import { fetchWikipedia } from '../api/wikipedia.js';
 import { fetchWorldBank } from '../api/worldBank.js';
 
+const CACHE_TTL = 3600; // 1 hour
+
 export const locationRouter = t.router({
   getInfo: publicProcedure
     .input(z.object({ 
@@ -42,7 +44,6 @@ export const locationRouter = t.router({
           fetchCountryData(reverseGeo.countryCode),
           fetchWorldBank(reverseGeo.countryCode)
         ]);
-        log.debug('[API] World Bank data:', JSON.stringify(worldBank));
       }
 
       const result = {
@@ -76,9 +77,8 @@ export const locationRouter = t.router({
         },
         wikipedia,
       };
-      log.debug('[API] Wikipedia articles found:', wikipedia.length);
 
-      await redis.setEx(cacheKey, 3600, JSON.stringify(result));
+      await redis.setEx(cacheKey, CACHE_TTL, JSON.stringify(result));
       log.debug('[Cache] Stored:', cacheKey);
       return result;
     }),

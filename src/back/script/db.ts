@@ -9,17 +9,19 @@ config({ path: join(dir, '../../../.env') });
 const { Pool } = pg;
 
 const getPool = (database?: string) => new Pool({
-  host: process.env.POSTGRES_HOST || 'localhost',
-  port: Number(process.env.POSTGRES_PORT) || 5432,
-  database: database || process.env.POSTGRES_DB || 'mapboxsandbox',
-  user: process.env.POSTGRES_USER || 'admin',
-  password: process.env.POSTGRES_PASSWORD || 'your_password',
+  host: 'localhost',  // TODO: use separate env var
+  port: Number(process.env.POSTGRES_PORT),
+  database: database || process.env.POSTGRES_DB,
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
 });
 
 export async function ensureDatabase() {
   const pool = getPool('postgres');
   try {
-    const dbName = process.env.POSTGRES_DB || 'mapboxsandbox';
+    const dbName = process.env.POSTGRES_DB;
+    if (!dbName) throw new Error('POSTGRES_DB not set');
+    
     const result = await pool.query(`SELECT 1 FROM pg_database WHERE datname = $1`, [dbName]);
     if (result.rowCount === 0) {
       await pool.query(`CREATE DATABASE ${dbName}`);

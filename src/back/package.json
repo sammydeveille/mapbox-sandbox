@@ -11,9 +11,9 @@
     "test:watch": "vitest --watch",
     "typecheck": "tsc --noEmit",
     "db:create": "tsx script/db.ts ensure",
-    "db:push": "drizzle-kit push",
     "db:seed": "tsx script/seed.ts",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:sync": "drizzle-kit push"
   },
   "dependencies": {
     "@trpc/server": "^10.45.0",

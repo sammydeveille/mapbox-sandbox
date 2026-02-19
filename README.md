@@ -83,6 +83,7 @@ npm run audit
 ```bash
 # Database
 npm run db:create  # Create db
+npm run db:delete  # Delete db volume
 npm run db:seed    # Seed
 npm run db:sync    # Drizzle schema push
 npm run db:studio

@@ -1,15 +1,21 @@
 import type { Config } from 'drizzle-kit';
+import { config } from 'dotenv';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const dir = dirname(fileURLToPath(import.meta.url));
+config({ path: join(dir, '../../.env') });
 
 export default {
   schema: './src/db/schema.ts',
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
-    host: process.env.POSTGRES_HOST || 'localhost',
-    port: Number(process.env.POSTGRES_PORT) || 5432,
-    user: process.env.POSTGRES_USER || 'admin',
-    password: process.env.POSTGRES_PASSWORD || 'your_password',
-    database: process.env.POSTGRES_DB || 'mapboxsandbox',
+    host: 'localhost', // TODO: use separate env var
+    port: Number(process.env.POSTGRES_PORT),
+    user: process.env.POSTGRES_USER!,
+    password: process.env.POSTGRES_PASSWORD!,
+    database: process.env.POSTGRES_DB!,
     ssl: false,
   },
 } satisfies Config;

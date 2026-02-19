@@ -6,12 +6,8 @@ import { locationRouter } from './routers/location.js';
 config();
 
 export const appRouter = t.router({
-  getMapboxToken: publicProcedure
-    .query(() => {
-      return { token: process.env.MAPBOX_ACCESS_TOKEN || '' };
-    }),
-
   feedback: feedbackRouter,
+  getMapboxToken: publicProcedure.query(() => ({ token: process.env.MAPBOX_ACCESS_TOKEN! })),
   location: locationRouter,
 });
 

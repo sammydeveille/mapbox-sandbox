@@ -9,6 +9,7 @@
     "audit": "cd src/back && npm audit --production && cd ../front && npm audit --production",
     "clean": "rm -rf src/back/node_modules src/front/node_modules",
     "db:create": "cd src/back && npm run db:create",
+    "db:delete": "docker volume rm mapbox-sandbox_postgres_data",
     "db:seed": "cd src/back && npm run db:seed",
     "db:studio": "cd src/back && npm run db:studio",
     "db:sync": "cd src/back && npm run db:sync",
