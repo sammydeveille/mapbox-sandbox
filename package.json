@@ -1,0 +1,30 @@
+{
+  "name": "mapbox-sandbox",
+  "version": "1.0.0",
+  "description": "Location search app using Mapbox, React and Node.js",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "audit": "cd src/back && npm audit --production && cd ../front && npm audit --production",
+    "clean": "rm -rf src/back/node_modules src/front/node_modules",
+    "db:ensure": "cd src/back && npm run db:ensure",
+    "db:push": "cd src/back && npm run db:push",
+    "db:seed": "cd src/back && npm run db:seed",
+    "db:studio": "cd src/back && npm run db:studio",
+    "docker:rebuild": "npm stop && docker-compose -f infra/docker.yml build --no-cache && npm start",
+    "docker:restart": "docker-compose -f infra/docker.yml restart",
+    "env": "cp .env.example .env",
+    "install": "cd src/back && npm i && cd ../front && npm i",
+    "log": "docker-compose -f infra/docker.yml logs -f",
+    "log:back": "docker logs -f back",
+    "log:front": "docker logs -f front",
+    "rebuild": "npm stop && docker-compose -f infra/docker.yml build --no-cache && npm start",
+    "redis:flush": "docker exec redis redis-cli FLUSHALL",
+    "start": "docker-compose --env-file .env -f infra/docker.yml up -d",
+    "dev:back": "cd src/back && npm run dev",
+    "dev:front": "cd src/front && npm run dev",
+    "stop": "docker-compose -f infra/docker.yml down",
+    "test": "cd src/back && npm test"
+  }
+}
