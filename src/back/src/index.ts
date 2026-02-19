@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
-import { appRouter } from './router.js';
+import { appRouter } from './router';
 import { config } from 'dotenv';
-import { log } from './utils/log.js';
+import { log } from './utils/log';
 
 config();
 

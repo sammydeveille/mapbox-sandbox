@@ -11,6 +11,7 @@ function FeedbackForm() {
   const { data: feedbackList } = trpc.feedback.list.useQuery();
   const createMutation = trpc.feedback.create.useMutation();
   const updateMutation = trpc.feedback.update.useMutation();
+  const utils = trpc.useUtils();
 
   useEffect(() => {
     if (id && feedbackList) {
@@ -24,11 +25,11 @@ function FeedbackForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (id) {
-      await updateMutation.mutateAsync({ id: Number(id), title, description });
-    } else {
-      await createMutation.mutateAsync({ title, description });
-    }
+    await (id 
+      ? updateMutation.mutateAsync({ id: Number(id), title, description })
+      : createMutation.mutateAsync({ title, description })
+    );
+    utils.feedback.list.invalidate();
     navigate('/feedback');
   };
 

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { locationRouter } from '../routers/location.js';
+import { locationRouter } from '../routers/location';
 
 // Mock Redis
-vi.mock('../utils/redis.js', () => ({
+vi.mock('../utils/redis', () => ({
   redis: {
     get: vi.fn().mockResolvedValue(null), // Cache miss by default
     setEx: vi.fn().mockResolvedValue('OK')
@@ -10,7 +10,7 @@ vi.mock('../utils/redis.js', () => ({
 }));
 
 // Mock API calls
-vi.mock('../api/weather.js', () => ({
+vi.mock('../api/weather', () => ({
   fetchWeather: vi.fn().mockResolvedValue({
     elevation: 11,
     timezone: 'Europe/London',
@@ -22,7 +22,7 @@ vi.mock('../api/weather.js', () => ({
   })
 }));
 
-vi.mock('../api/airQuality.js', () => ({
+vi.mock('../api/airQuality', () => ({
   fetchAirQuality: vi.fn().mockResolvedValue({
     current: {
       european_aqi: 25,
@@ -32,19 +32,19 @@ vi.mock('../api/airQuality.js', () => ({
   })
 }));
 
-vi.mock('../api/wikipedia.js', () => ({
+vi.mock('../api/wikipedia', () => ({
   fetchWikipedia: vi.fn().mockResolvedValue([
     { title: 'London', url: 'https://en.wikipedia.org/wiki/London' }
   ])
 }));
 
-vi.mock('../api/geocoding.js', () => ({
+vi.mock('../api/geocoding', () => ({
   fetchReverseGeocode: vi.fn().mockResolvedValue({
     countryCode: 'GB'
   })
 }));
 
-vi.mock('../api/country.js', () => ({
+vi.mock('../api/country', () => ({
   fetchCountryData: vi.fn().mockResolvedValue({
     name: { common: 'United Kingdom' },
     capital: ['London'],
@@ -54,14 +54,14 @@ vi.mock('../api/country.js', () => ({
   })
 }));
 
-vi.mock('../api/worldBank.js', () => ({
+vi.mock('../api/worldBank', () => ({
   fetchWorldBank: vi.fn().mockResolvedValue({
     'NY.GDP.PCAP.CD': 46000,
     'NY.GDP.MKTP.KD.ZG': 2.1
   })
 }));
 
-vi.mock('../utils/log.js', () => ({
+vi.mock('../utils/log', () => ({
   log: {
     debug: vi.fn(),
     error: vi.fn(),
@@ -103,7 +103,7 @@ describe('Location Router Integration', () => {
     });
 
     it('uses cache on second call', async () => {
-      const { redis } = await import('../utils/redis.js');
+      const { redis } = await import('../utils/redis');
       
       // First call - cache miss
       await caller.getInfo({ lat: 51.5074, lng: -0.1278 });

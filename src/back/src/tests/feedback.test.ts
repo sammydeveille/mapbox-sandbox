@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { feedbackRouter } from '../routers/feedback.js';
+import { feedbackRouter } from '../routers/feedback';
 
 // Mock the database module
-vi.mock('../db/index.js', () => ({
+vi.mock('../db/index', () => ({
   db: {
     select: vi.fn().mockReturnThis(),
     from: vi.fn().mockResolvedValue([
@@ -21,7 +21,7 @@ vi.mock('../db/index.js', () => ({
 }));
 
 // Mock the logger
-vi.mock('../utils/log.js', () => ({
+vi.mock('../utils/log', () => ({
   log: {
     debug: vi.fn(),
     error: vi.fn(),

@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from '@trpc/server';
-import { log } from './utils/log.js';
+import { log } from './utils/log';
 
 export const t = initTRPC.create({
   errorFormatter({ shape, error }) {
@@ -59,4 +59,4 @@ const loggingMdw = t.middleware(async ({ path, type, next }) => {
 
 
 
-export const publicProcedure = t.procedure.use(loggingMdw);
+export const procedure = t.procedure.use(loggingMdw);

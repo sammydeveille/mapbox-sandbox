@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
-import { noHtmlString } from '../utils/validators.js';
+import { noHtmlString } from '../utils/validators';
 
 // Test schemas - match what's used in routers
 const feedbackCreateSchema = z.object({ 

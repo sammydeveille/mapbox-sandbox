@@ -1,23 +1,25 @@
 import { z } from 'zod';
-import { redis } from '../utils/redis.js';
-import { publicProcedure, t } from '../trpc.js';
-import { log } from '../utils/log.js';
-import { fetchAirQuality } from '../api/airQuality.js';
-import { fetchCountryData } from '../api/country.js';
-import { fetchReverseGeocode } from '../api/geocoding.js';
-import { fetchWeather } from '../api/weather.js';
-import { fetchWikipedia } from '../api/wikipedia.js';
-import { fetchWorldBank } from '../api/worldBank.js';
+import { redis } from '../utils/redis';
+import { procedure, t } from '../trpc';
+import { log } from '../utils/log';
+import { fetchAirQuality } from '../api/airQuality';
+import { fetchCountryData } from '../api/country';
+import { fetchReverseGeocode } from '../api/geocoding';
+import { fetchWeather } from '../api/weather';
+import { fetchWikipedia } from '../api/wikipedia';
+import { fetchWorldBank } from '../api/worldBank';
+import { buildLocationInfo } from '../utils/locationBuilder';
+import type { LocationInfo } from '../types/location';
 
 const CACHE_TTL = 3600; // 1 hour
 
 export const locationRouter = t.router({
-  getInfo: publicProcedure
+  getInfo: procedure
     .input(z.object({ 
       lat: z.number().min(-90).max(90),
       lng: z.number().min(-180).max(180)
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input }): Promise<LocationInfo> => {
       const cacheKey = `location:${input.lat.toFixed(4)}:${input.lng.toFixed(4)}`;
       
       const cached = await redis.get(cacheKey);
@@ -46,37 +48,7 @@ export const locationRouter = t.router({
         ]);
       }
 
-      const result = {
-        elevation: weather.elevation,
-        temperature: weather.current.temperature_2m,
-        humidity: weather.current.relative_humidity_2m,
-        windSpeed: weather.current.wind_speed_10m,
-        timezone: weather.timezone,
-        aqi: airQuality.current?.european_aqi,
-        pm10: airQuality.current?.pm10,
-        pm25: airQuality.current?.pm2_5,
-        countryName: country?.name?.common,
-        countryCapital: country?.capital?.[0],
-        countryPopulation: country?.population,
-        countryCurrency: (Object.values(country?.currencies || {}) as any)?.[0]?.name as string | undefined,
-        countryLanguages: Object.values(country?.languages || {}).join(', '),
-        worldBank: {
-          gdpPerCapita: worldBank['NY.GDP.PCAP.CD'],
-          gdpGrowth: worldBank['NY.GDP.MKTP.KD.ZG'],
-          unemployment: worldBank['SL.UEM.TOTL.ZS'],
-          exports: worldBank['NE.EXP.GNFS.ZS'],
-          imports: worldBank['NE.IMP.GNFS.ZS'],
-          lifeExpectancy: worldBank['SP.DYN.LE00.IN'],
-          infantMortality: worldBank['SH.DYN.MORT'],
-          literacyRate: worldBank['SE.ADT.LITR.ZS'],
-          populationGrowth: worldBank['SP.POP.GROW'],
-          urbanPopulation: worldBank['SP.URB.TOTL.IN.ZS'],
-          co2Emissions: worldBank['EN.ATM.CO2E.PC'],
-          renewableEnergy: worldBank['EG.FEC.RNEW.ZS'],
-          internetUsers: worldBank['IT.NET.USER.ZS'],
-        },
-        wikipedia,
-      };
+      const result = buildLocationInfo(weather, airQuality, wikipedia, country, worldBank);
 
       await redis.setEx(cacheKey, CACHE_TTL, JSON.stringify(result));
       log.debug('[Cache] Stored:', cacheKey);
