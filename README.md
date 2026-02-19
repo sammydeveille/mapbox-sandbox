@@ -7,7 +7,7 @@
 ## Overview
 
 - [About](#about)
-- [Architecture](#architecture)
+- [Structure](#structure)
 - [Prerequisites](#prerequisites)
 - [Install](#install)
 - [Run](#run)
@@ -16,21 +16,21 @@
 
 This demo is using [Mapbox](https://www.mapbox.com/), [React](), [Tailwind CSS](https://tailwindcss.com/), [Node.js](https://tailwindcss.com/), [tRPC](https://trpc.io/), [Drizzle ORM](https://orm.drizzle.team/), [PostgreSQL](https://www.postgresql.org/) and [Redis](https://redis.io/) to build a full-stack location search application with interactive map.
 
-## Architecture
+## Structure
 
-### Front routes
-- `/` - Home page with location search
-- `/feedback` - Feedback list view
-- `/feedback/new` - Create new feedback
-- `/feedback/:id/edit` - Edit existing feedback
+### Front
+- `/`: Home page with location search
+- `/feedback`: Feedback list
+- `/feedback/new`: Create new feedback
+- `/feedback/:id/edit`: Edit existing feedback
 
-### Backend routes
-- `getMapboxToken` - Returns Mapbox access token
-- `location.getInfo` - Fetches location data (weather, air quality, Wikipedia, country info, World Bank data)
-- `feedback.list` - List all feedback
-- `feedback.create` - Create new feedback
-- `feedback.update` - Update existing feedback
-- `feedback.delete` - Delete feedback
+### Back
+- `feedback.list`: List all feedback
+- `feedback.create`: Create new feedback
+- `feedback.update`: Update existing feedback
+- `feedback.delete`: Delete feedback
+- `getMapboxToken`: Returns Mapbox access token
+- `location.getInfo`: Fetches location data (weather, air quality, Wikipedia, country info, World Bank data)
 
 ## Prerequisites
 
@@ -50,8 +50,8 @@ npm run env
 
 # Database setup
 npm run db:create  # Create db
-npm run db:push    # Synch schema
 npm run db:seed    # Seed
+npm run db:sync    # Drizzle schema push
 ```
 
 ## Run
@@ -82,9 +82,9 @@ npm run audit
 ## Utils
 ```bash
 # Database
-npm run db:create   # Create db
-npm run db:push     # Push schema changes
-npm run db:seed     # Seed
+npm run db:create  # Create db
+npm run db:seed    # Seed
+npm run db:sync    # Drizzle schema push
 npm run db:studio
 
 # Type checking
