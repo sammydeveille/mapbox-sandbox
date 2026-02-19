@@ -46,7 +46,10 @@ npm i
 
 # Environment file
 npm run env
-#   Modify vars such as MAPBOX_ACCESS_TOKEN
+#   Modify vars in .env such as MAPBOX_ACCESS_TOKEN
+
+# Compose containers
+npm start
 
 # Database setup
 npm run db:create  # Create db
@@ -76,7 +79,7 @@ npm test
 ```bash 
 npm run audit
 ```
-> **Note:** Known vulnerabilities in `drizzle-kit` (dev dependency) do not affect production. Use `--production` flag for production-only audit.
+> **Note:** Known vulnerabilities in `drizzle-kit` (dev dependency). Use `--production` flag for production-only audits.
 
 
 ## Utils
