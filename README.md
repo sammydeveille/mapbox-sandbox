@@ -35,7 +35,7 @@ This demo is using [Mapbox](https://www.mapbox.com/), [React](), [Tailwind CSS](
 ## Prerequisites
 
 - [Docker](https://www.mapbox.com)
-- [Node.js](https://github.com/nvm-sh/nvm) 20+ with npm
+- [Node.js](https://github.com/nvm-sh/nvm) 22
 - [Mapbox](https://www.mapbox.com) Access Token
 
 ## Install

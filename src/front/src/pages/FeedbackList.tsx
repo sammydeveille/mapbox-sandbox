@@ -7,8 +7,12 @@ function FeedbackList() {
   const utils = trpc.useContext();
 
   const handleDelete = async (id: number) => {
-    await deleteMutation.mutateAsync({ id });
-    utils.feedback.list.invalidate();
+    try {
+      await deleteMutation.mutateAsync({ id });
+      utils.feedback.list.invalidate();
+    } catch (error) {
+      console.error('Failed to delete feedback:', error);
+    }
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -30,8 +34,12 @@ function FeedbackList() {
               <Link to={`/feedback/${item.id}/edit`} className="text-blue-500 text-sm hover:underline">
                 Edit
               </Link>
-              <button onClick={() => handleDelete(item.id)} className="text-red-500 text-sm hover:underline">
-                Delete
+              <button 
+                onClick={() => handleDelete(item.id)} 
+                disabled={deleteMutation.isPending}
+                className="text-red-500 text-sm hover:underline disabled:opacity-50"
+              >
+                {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           </div>
