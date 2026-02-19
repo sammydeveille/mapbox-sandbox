@@ -46,8 +46,10 @@ npm i
 npm run env
 #   Modify vars such as MAPBOX_ACCESS_TOKEN
 
-# Seed data
-npm run db:seed
+# Database setup
+npm run db:create  # Create db
+npm run db:push    # Synch schema
+npm run db:seed    # Seed
 ```
 
 ## Run
@@ -77,15 +79,24 @@ npm run audit
 
 ## Utils
 ```bash
+# Database
+npm run db:create   # Create db
+npm run db:push     # Push schema changes
+npm run db:seed     # Seed
+npm run db:studio
+
+# Type checking
+npm run typecheck
+
 # Logs
 npm run log
-npm run log:front
+npm run log:back
 npm run log:front
 
 # Docker
 npm run docker:restart
 npm run docker:rebuild
 
-# Redis flush
+# Redis
 npm run redis:flush
 ```

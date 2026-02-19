@@ -8,7 +8,7 @@
   "scripts": {
     "audit": "cd src/back && npm audit --production && cd ../front && npm audit --production",
     "clean": "rm -rf src/back/node_modules src/front/node_modules",
-    "db:ensure": "cd src/back && npm run db:ensure",
+    "db:create": "cd src/back && npm run db:create",
     "db:push": "cd src/back && npm run db:push",
     "db:seed": "cd src/back && npm run db:seed",
     "db:studio": "cd src/back && npm run db:studio",
@@ -25,6 +25,7 @@
     "dev:back": "cd src/back && npm run dev",
     "dev:front": "cd src/front && npm run dev",
     "stop": "docker-compose -f infra/docker.yml down",
-    "test": "cd src/back && npm test"
+    "test": "cd src/back && npm test",
+    "typecheck": "cd src/back && npm run typecheck && cd ../front && npm run typecheck"
   }
 }

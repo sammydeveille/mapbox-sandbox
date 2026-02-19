@@ -8,7 +8,6 @@ import App from './App';
 import Home from './pages/Home';
 import FeedbackList from './pages/FeedbackList';
 import FeedbackForm from './pages/FeedbackForm';
-import Map from './Map';
 import './index.css';
 
 const queryClient = new QueryClient({

@@ -57,7 +57,7 @@ export const locationRouter = t.router({
         countryName: country?.name?.common,
         countryCapital: country?.capital?.[0],
         countryPopulation: country?.population,
-        countryCurrency: Object.values(country?.currencies || {})?.[0]?.name,
+        countryCurrency: (Object.values(country?.currencies || {}) as any)?.[0]?.name as string | undefined,
         countryLanguages: Object.values(country?.languages || {}).join(', '),
         worldBank: {
           gdpPerCapita: worldBank['NY.GDP.PCAP.CD'],

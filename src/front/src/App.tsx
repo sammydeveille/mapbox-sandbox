@@ -5,7 +5,7 @@ import URLViewer from './components/URLViewer';
 import { useRef, useState, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 
-function App({ children }: { children: React.ReactNode }) {
+function App({ children }: { children: ((props: { onLocationSearch: (lng: number, lat: number) => void; onOpenViewer: (url: string, title: string, source: string) => void; accessToken: string }) => React.ReactNode) | React.ReactNode }) {
   const mapboxToken = trpc.getMapboxToken.useQuery();
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const [viewerUrl, setViewerUrl] = useState<string | null>(null);
