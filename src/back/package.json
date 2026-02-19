@@ -1,0 +1,37 @@
+{
+  "name": "searchland-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "script": "tsx",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "db:ensure": "tsx script/db.ts ensure",
+    "db:push": "drizzle-kit push",
+    "db:seed": "tsx script/seed.ts",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@trpc/server": "^10.45.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "^0.45.1",
+    "express": "^4.18.2",
+    "pg": "^8.11.3",
+    "redis": "^5.11.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.6",
+    "@vitest/ui": "^4.0.18",
+    "drizzle-kit": "^0.31.9",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.18"
+  }
+}

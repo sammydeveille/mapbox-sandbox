@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "Green Belt Site A",
+      "location": "North London",
+      "type": "greenfield"
+    },
+    {
+      "name": "Brownfield Site B",
+      "location": "East London",
+      "type": "brownfield"
+    }
+  ],
+  "feedback": [
+    {
+      "title": "Great feature request",
+      "description": "Would love to see dark mode support in the application"
+    },
+    {
+      "title": "Bug report",
+      "description": "Map zoom controls are not working properly on mobile devices"
+    },
+    {
+      "title": "Performance issue",
+      "description": "Page load time is slow when displaying large datasets"
+    }
+  ]
+}
