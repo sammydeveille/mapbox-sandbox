@@ -14,7 +14,7 @@
 
 ## About
 
-This demo is using [Mapbox](https://www.mapbox.com/), [React](), [Tailwind CSS](https://tailwindcss.com/), [Node.js](https://tailwindcss.com/), [tRPC](https://trpc.io/), [Drizzle ORM](https://orm.drizzle.team/), [PostgreSQL](https://www.postgresql.org/) and [Redis](https://redis.io/) to build a full-stack location search application with interactive map.
+This demo is using [Mapbox](https://www.mapbox.com/), [React](), [Tailwind CSS](https://tailwindcss.com/), [Node.js](https://tailwindcss.com/), [tRPC](https://trpc.io/), [Drizzle ORM](https://orm.drizzle.team/), [PostgreSQL](https://www.postgresql.org/), [Redis](https://redis.io/) and [Elasticsearch](https://www.elastic.co/) to build a full-stack location search application with interactive map.
 
 ## Structure
 
@@ -74,6 +74,7 @@ npm test
 - Backend: http://localhost:3001 (Express + tRPC)
 - PostgreSQL: `localhost:5432` (Database)
 - Redis: `localhost:6379` (Cache)
+- Elasticsearch: `localhost:9200` (Search)
 
 ## Audit
 ```bash 

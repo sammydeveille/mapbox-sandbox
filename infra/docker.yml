@@ -19,6 +19,20 @@ services:
     restart: unless-stopped
     mem_limit: ${DOCKER_BACK_MEM:-512m}
 
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "${ELASTICSEARCH_PORT:-9200}:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+    mem_limit: ${DOCKER_ELASTICSEARCH_MEM:-1g}
+
   frontend:
     build:
       context: ../src/front
@@ -58,5 +72,6 @@ services:
     mem_limit: ${DOCKER_REDIS_MEM:-128m}
 
 volumes:
+  elasticsearch_data:
   postgres_data:
   redis_data:
