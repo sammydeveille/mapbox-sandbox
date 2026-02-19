@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: |
+            src/back/package-lock.json
+            src/front/package-lock.json
+      
+      - name: Install backend dependencies
+        run: cd src/back && npm ci
+      
+      - name: Install frontend dependencies
+        run: cd src/front && npm ci
+      
+      - name: Run backend tests
+        run: cd src/back && npm test
+      
+      - name: Build backend
+        run: cd src/back && npm run build
+      
+      - name: Build frontend
+        run: cd src/front && npm run build
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      
+      - name: Audit backend dependencies
+        run: cd src/back && npm audit --production
+        continue-on-error: true
+      
+      - name: Audit frontend dependencies
+        run: cd src/front && npm audit --production
+        continue-on-error: true
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: |
+            src/back/package-lock.json
+            src/front/package-lock.json
+      
+      - name: Install backend dependencies
+        run: cd src/back && npm ci
+      
+      - name: Install frontend dependencies
+        run: cd src/front && npm ci
+      
+      - name: Check TypeScript (backend)
+        run: cd src/back && npx tsc --noEmit
+      
+      - name: Check TypeScript (frontend)
+        run: cd src/front && npx tsc --noEmit

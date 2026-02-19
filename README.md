@@ -1,5 +1,7 @@
 # Mapbox / Location Search Demo
 
+[![Code Checks](https://github.com/sammydeveille/mapbox-sandbox/actions/workflows/ci.yml/badge.svg)](https://github.com/sammydeveille/mapbox-sandbox/actions/workflows/ci.yml)
+
 ## Overview
 
 - [About](#about)

@@ -1,0 +1,64 @@
+version: '3.8'
+
+name: mapbox-sandbox
+
+services:
+  backend:
+    build:
+      context: ../src/back
+    container_name: back
+    env_file:
+      - ../.env
+    ports:
+      - "${PORT_BACK:-3001}:3001"
+    volumes:
+      - ../src/back:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    mem_limit: ${DOCKER_BACK_MEM:-512m}
+
+  frontend:
+    build:
+      context: ../src/front
+    container_name: front
+    ports:
+      - "${PORT_FRONT:-3000}:3000"
+    volumes:
+      - ../src/front:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
+    mem_limit: ${DOCKER_FRONT_MEM:-512m}
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    env_file:
+      - ../.env
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    mem_limit: ${DOCKER_POSTGRES_MEM:-256m}
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    mem_limit: ${DOCKER_REDIS_MEM:-128m}
+
+volumes:
+  postgres_data:
+  redis_data:
