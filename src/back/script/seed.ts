@@ -12,7 +12,7 @@ config({ path: join(dir, '../../../.env') });
 const { Pool } = pg;
 
 const pool = new Pool({
-  host: 'localhost',   // TODO: use separate env
+  host: process.env.POSTGRES_HOST_LOCAL,
   port: Number(process.env.POSTGRES_PORT),
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,

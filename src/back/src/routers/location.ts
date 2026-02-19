@@ -9,6 +9,8 @@ import { fetchWeather } from '../api/weather';
 import { fetchWikipedia } from '../api/wikipedia';
 import { fetchWorldBank } from '../api/worldBank';
 import { buildLocationInfo } from '../utils/locationBuilder';
+
+import type { AirQualityResponse, CountryResponse, ReverseGeocodeResponse, WeatherResponse } from '../types/api';
 import type { LocationInfo } from '../types/location';
 
 const CACHE_TTL = 3600; // 1 hour
@@ -29,17 +31,22 @@ export const locationRouter = t.router({
       }
 
       log.debug('[API] Fetching data for:', input);
-      const [weather, airQuality, wikipedia, reverseGeo] = await Promise.all([
-        fetchWeather(input.lat, input.lng),
+      const [airQuality, reverseGeo, weather, wikipedia]: [
+        AirQualityResponse,
+        ReverseGeocodeResponse,
+        WeatherResponse,
+        any
+      ] = await Promise.all([
         fetchAirQuality(input.lat, input.lng),
-        fetchWikipedia(input.lat, input.lng),
-        fetchReverseGeocode(input.lat, input.lng)
+        fetchReverseGeocode(input.lat, input.lng),
+        fetchWeather(input.lat, input.lng),
+        fetchWikipedia(input.lat, input.lng)
       ]);
 
       if (!weather.current) throw new Error('Invalid weather response');
 
-      let country = null;
-      let worldBank: any = {};
+      let country: CountryResponse | null = null;
+      let worldBank: Record<string, number> = {};
 
       if (reverseGeo?.countryCode) {
         [country, worldBank] = await Promise.all([

@@ -1,5 +1,5 @@
 import { Widget, WidgetItem } from './Widget';
-import { AirQualityData, GeographyData, WeatherData, WikipediaArticle, CountryData } from '../../types';
+import { AirQualityData, GeographyData, WeatherData, WikipediaArticle, CountryData } from '../../types/location';
 
 export function AirQualityWidget({ aqi, pm10, pm25 }: AirQualityData) {
   if (!aqi && !pm10 && !pm25) return null;

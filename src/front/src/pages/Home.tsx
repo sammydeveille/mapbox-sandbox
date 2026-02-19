@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { trpc } from '../trpc';
 import { AirQualityWidget, GeographyWidget, WeatherWidget, WikipediaWidget, CountryWidget } from '../components/widgets/LocationWidgets';
+import type { LocationInfo } from '../types/router';
+import type { MapboxResponse } from '../types/interfaces';
 
 interface HomeProps {
   onLocationSearch: (lng: number, lat: number) => void;
@@ -11,19 +13,30 @@ interface HomeProps {
 function Home({ onLocationSearch, onOpenViewer, accessToken }: HomeProps) {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
-  const [locationData, setLocationData] = useState<any>(null);
+  const [locationData, setLocationData] = useState<LocationInfo | null>(null);
   const getLocationInfo = trpc.location.getInfo.useMutation();
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!search.trim()) return;
 
+    // Validate search input
+    const sanitizedSearch = search.trim();
+    if (sanitizedSearch.length > 200) {
+      console.error('Search query too long');
+      return;
+    }
+    if (!/^[a-zA-Z0-9\s,.-]+$/.test(sanitizedSearch)) {
+      console.error('Invalid characters in search query');
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(search)}.json?access_token=${accessToken}`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(sanitizedSearch)}.json?access_token=${accessToken}`
       );
-      const data = await response.json();
+      const data: MapboxResponse = await response.json();
       
       if (data.features && data.features.length > 0) {
         const [lng, lat] = data.features[0].center;

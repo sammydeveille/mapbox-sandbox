@@ -11,7 +11,7 @@ export default {
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
-    host: 'localhost', // TODO: use separate env var
+    host: process.env.POSTGRES_HOST_LOCAL,
     port: Number(process.env.POSTGRES_PORT),
     user: process.env.POSTGRES_USER!,
     password: process.env.POSTGRES_PASSWORD!,

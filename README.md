@@ -34,7 +34,7 @@ This demo is using [Mapbox](https://www.mapbox.com/), [React](), [Tailwind CSS](
 
 ## Prerequisites
 
-- [Docker](https://www.mapbox.com)
+- [Docker](https://www.docker.com)
 - [Node.js](https://github.com/nvm-sh/nvm) 22
 - [Mapbox](https://www.mapbox.com) Access Token
 
@@ -45,8 +45,8 @@ This demo is using [Mapbox](https://www.mapbox.com/), [React](), [Tailwind CSS](
 npm i
 
 # Environment file
-npm run env
-#   Modify vars in .env such as MAPBOX_ACCESS_TOKEN
+npm run env        # Copies .env.example to .env
+                   # Then set MAPBOX_ACCESS_TOKEN
 
 # Compose containers
 npm start
@@ -70,10 +70,10 @@ npm test
 ```
 
 ## Services
-- Frontend: http://localhost:3000
-- Backend: http://localhost:3001
-- PostgreSQL: `localhost:5432`
-- Redis: `localhost:6379`
+- Frontend: http://localhost:3000 (React + Vite)
+- Backend: http://localhost:3001 (Express + tRPC)
+- PostgreSQL: `localhost:5432` (Database)
+- Redis: `localhost:6379` (Cache)
 
 ## Audit
 ```bash 
@@ -106,3 +106,10 @@ npm run docker:rebuild
 # Redis
 npm run redis:flush
 ```
+
+## Production Readiness
+- Security headers configuration
+- Secrets management 
+- Add comprehensive logging and monitoring
+- Location API response validation and error boundaries
+- DB/Cache reconnection/state management
