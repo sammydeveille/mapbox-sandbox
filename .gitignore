@@ -13,7 +13,6 @@ build/
 # Database
 *.db
 *.sqlite
-drizzle/
 
 # Logs
 logs/

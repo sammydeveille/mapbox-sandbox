@@ -3,17 +3,20 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
     "build": "tsc",
+    "db:create": "tsx script/db.ts ensure",
+    "db:drop": "drizzle-kit drop",
+    "db:generate": "drizzle-kit generate --name",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx script/seed.ts",
+    "db:studio": "drizzle-kit studio",
+    "db:sync": "drizzle-kit push",
+    "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "script": "tsx",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "typecheck": "tsc --noEmit",
-    "db:create": "tsx script/db.ts ensure",
-    "db:seed": "tsx script/seed.ts",
-    "db:studio": "drizzle-kit studio",
-    "db:sync": "drizzle-kit push"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@trpc/server": "^10.45.0",

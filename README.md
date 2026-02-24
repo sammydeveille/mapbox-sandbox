@@ -54,7 +54,7 @@ npm start
 # Database setup
 npm run db:create  # Create db
 npm run db:seed    # Seed
-npm run db:sync    # Drizzle schema push
+npm run db:migrate # Apply migrations
 ```
 
 ## Run
@@ -85,11 +85,13 @@ npm run audit
 ## Utils
 ```bash
 # Database
-npm run db:create  # Create db
-npm run db:delete  # Delete db volume
-npm run db:seed    # Seed
-npm run db:sync    # Drizzle schema push
 npm run db:studio
+npm run db:create           # Create db
+npm run db:generate {name}  # Generate migration with custom name
+npm run db:migrate          # Apply migrations
+npm run db:drop             # Remove last migration
+npm run db:delete           # Delete db volume
+npm run db:seed             # Seed
 
 # Type checking
 npm run typecheck
