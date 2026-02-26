@@ -46,4 +46,17 @@ export const feedbackRouter = t.router({
       await db.delete(feedback).where(eq(feedback.id, input.id));
       return { success: true };
     }),
+
+  assignLabel: procedure
+    .input(z.object({
+      feedbackId: z.number().int().positive(),
+      labelId: z.number().int().positive()
+    }))
+    .mutation(async ({ input }) => {
+      log.debug('[DB] Assigning label to feedback:', input.feedbackId, input.labelId);
+      // Implementation for assigning label to feedback
+
+      
+
+    })
 });

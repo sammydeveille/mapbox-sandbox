@@ -111,4 +111,13 @@ describe('Feedback Router Integration', () => {
       ).rejects.toThrow();
     });
   });
+
+  describe('assignLabel', () => {
+
+    it('assigns feedback to label', async () => {
+      const result = await caller.assignLabel({ feedbackId: 0, labelId: 0})
+
+      expect(result).toHaveProperty('success', false);
+    })
+  })
 });
