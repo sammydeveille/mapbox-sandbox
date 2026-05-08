@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, ReactNode } from 'react';
 
 interface WidgetProps {
@@ -37,7 +39,7 @@ export function Widget({ title, icon, children, collapsible = false, defaultOpen
 interface WidgetItemProps {
   label?: string;
   value: string | number;
-  format?: (val: any) => string;
+  format?: (val: string | number) => string;
 }
 
 export function WidgetItem({ label, value, format }: WidgetItemProps) {

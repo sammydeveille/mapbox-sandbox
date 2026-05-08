@@ -1,9 +1,11 @@
+'use client';
+
 import { Widget, WidgetItem } from './Widget';
-import { AirQualityData, GeographyData, WeatherData, WikipediaArticle, CountryData } from '../../types/location';
+import type { AirQualityData, GeographyData, WeatherData, WikipediaArticle, CountryData } from '@/types/location';
 
 export function AirQualityWidget({ aqi, pm10, pm25 }: AirQualityData) {
   if (!aqi && !pm10 && !pm25) return null;
-  
+
   return (
     <Widget title="Air Quality" icon="🌫️">
       {aqi && <WidgetItem label="AQI" value={aqi} />}
@@ -15,7 +17,7 @@ export function AirQualityWidget({ aqi, pm10, pm25 }: AirQualityData) {
 
 export function GeographyWidget({ elevation, timezone }: GeographyData) {
   if (!elevation && !timezone) return null;
-  
+
   return (
     <Widget title="Geography" icon="🗺️">
       {elevation && <WidgetItem label="Elevation" value={`${elevation}m`} />}
@@ -26,7 +28,7 @@ export function GeographyWidget({ elevation, timezone }: GeographyData) {
 
 export function WeatherWidget({ temperature, humidity, windSpeed }: WeatherData) {
   if (!temperature && !humidity && !windSpeed) return null;
-  
+
   return (
     <Widget title="Weather" icon="🌤️">
       {temperature && <WidgetItem label="Temperature" value={`${temperature}°C`} />}
@@ -38,7 +40,7 @@ export function WeatherWidget({ temperature, humidity, windSpeed }: WeatherData)
 
 export function WikipediaWidget({ articles, onOpenViewer }: { articles?: WikipediaArticle[]; onOpenViewer: (url: string, title: string, source: string) => void }) {
   if (!articles || articles.length === 0) return null;
-  
+
   return (
     <Widget title="Wikipedia" icon="📚">
       {articles.map((article) => (
@@ -57,7 +59,7 @@ export function WikipediaWidget({ articles, onOpenViewer }: { articles?: Wikiped
 export function CountryWidget({ countryName, countryCapital, countryPopulation, countryCurrency, countryLanguages, worldBank }: CountryData) {
   const hasBasicInfo = countryName || countryCapital || countryPopulation || countryCurrency || countryLanguages;
   if (!hasBasicInfo && !worldBank) return null;
-  
+
   return (
     <Widget title="Country Info" icon="🌍">
       {countryName && <WidgetItem label="Country" value={countryName} />}
@@ -70,7 +72,7 @@ export function CountryWidget({ countryName, countryCapital, countryPopulation, 
         <>
           {(worldBank.gdpPerCapita || worldBank.gdpGrowth) && (
             <Widget title="Economy" icon="💰" collapsible>
-              {worldBank.gdpPerCapita && <WidgetItem label="GDP per Capita" value={`$${worldBank.gdpPerCapita.toLocaleString(undefined, {maximumFractionDigits: 0})}`} />}
+              {worldBank.gdpPerCapita && <WidgetItem label="GDP per Capita" value={`$${worldBank.gdpPerCapita.toLocaleString(undefined, { maximumFractionDigits: 0 })}`} />}
               {worldBank.gdpGrowth && <WidgetItem label="GDP Growth" value={`${worldBank.gdpGrowth.toFixed(2)}%`} />}
             </Widget>
           )}

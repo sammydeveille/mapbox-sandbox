@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -8,7 +10,7 @@ interface MapProps {
   darkMode?: boolean;
 }
 
-function Map({ accessToken, onMapReady, darkMode }: MapProps) {
+export function Map({ accessToken, onMapReady, darkMode }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -31,12 +33,12 @@ function Map({ accessToken, onMapReady, darkMode }: MapProps) {
     map.current.on('load', () => {
       map.current?.setPadding({ left: window.innerWidth / 3, top: 0, right: 0, bottom: 0 });
       setMapLoaded(true);
-      
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           map.current?.flyTo({
             center: [position.coords.longitude, position.coords.latitude],
-            zoom: 13
+            zoom: 13,
           });
         },
         () => {
@@ -53,21 +55,21 @@ function Map({ accessToken, onMapReady, darkMode }: MapProps) {
         lat: center.lat,
         zoom: map.current.getZoom(),
         pitch: map.current.getPitch(),
-        bearing: map.current.getBearing()
+        bearing: map.current.getBearing(),
       });
     };
 
     updateInfo();
-    
+
     const events = ['move', 'zoom', 'rotate', 'pitch'];
-    events.forEach(event => map.current?.on(event, updateInfo));
+    events.forEach((event) => map.current?.on(event, updateInfo));
 
     if (onMapReady) {
       onMapReady(map.current);
     }
 
     return () => {
-      events.forEach(event => map.current?.off(event, updateInfo));
+      events.forEach((event) => map.current?.off(event, updateInfo));
       map.current?.remove();
       map.current = null;
     };
@@ -83,14 +85,17 @@ function Map({ accessToken, onMapReady, darkMode }: MapProps) {
 
   return (
     <>
-      <div ref={mapContainer} style={{ 
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 0
-      }} />
+      <div
+        ref={mapContainer}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+        }}
+      />
       <div className="fixed bottom-4 right-4 z-10 bg-bg-primary p-3 rounded shadow-lg">
         {mapLoaded && (
           <div className="text-xs text-text-secondary space-y-1">
@@ -105,5 +110,3 @@ function Map({ accessToken, onMapReady, darkMode }: MapProps) {
     </>
   );
 }
-
-export default Map;

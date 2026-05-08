@@ -23,6 +23,8 @@ services:
     build:
       context: ../src/front
     container_name: front
+    env_file:
+      - ../.env
     ports:
       - "${PORT_FRONT:-3000}:3000"
     volumes:

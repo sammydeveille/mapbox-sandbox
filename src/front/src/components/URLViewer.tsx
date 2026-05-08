@@ -1,3 +1,5 @@
+'use client';
+
 interface URLViewerProps {
   url: string;
   title: string | null;
@@ -5,7 +7,7 @@ interface URLViewerProps {
   onClose: () => void;
 }
 
-function URLViewer({ url, title, source, onClose }: URLViewerProps) {
+export function URLViewer({ url, title, source, onClose }: URLViewerProps) {
   return (
     <div className="fixed left-1/3 top-16 right-16 bottom-16 bg-bg-primary z-10 rounded-lg shadow-2xl ml-16">
       <div className="h-full flex flex-col p-6">
@@ -16,18 +18,13 @@ function URLViewer({ url, title, source, onClose }: URLViewerProps) {
           <button
             onClick={onClose}
             className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 text-xl"
+            aria-label="Close viewer"
           >
             ×
           </button>
         </div>
-        <iframe
-          src={url}
-          className="w-full flex-1 border-0 rounded-lg"
-          title="URL Viewer"
-        />
+        <iframe src={url} className="w-full flex-1 border-0 rounded-lg" title="URL Viewer" />
       </div>
     </div>
   );
 }
-
-export default URLViewer;

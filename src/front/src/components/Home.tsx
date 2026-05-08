@@ -1,48 +1,33 @@
+'use client';
+
 import { useState } from 'react';
-import { trpc } from '../trpc';
-import { AirQualityWidget, GeographyWidget, WeatherWidget, WikipediaWidget, CountryWidget } from '../components/widgets/LocationWidgets';
-import type { LocationInfo } from '../types/router';
-import type { MapboxResponse } from '../types/interfaces';
+import { useMutation } from '@tanstack/react-query';
+import { useTRPC } from '@/lib/trpc';
+import { useAppShell } from './AppShell';
+import { geocodeLocation } from '@/app/actions';
+import { AirQualityWidget, GeographyWidget, WeatherWidget, WikipediaWidget, CountryWidget } from './widgets/LocationWidgets';
+import type { LocationInfo } from '@/types/router';
 
-interface HomeProps {
-  onLocationSearch: (lng: number, lat: number) => void;
-  onOpenViewer: (url: string, title: string, source: string) => void;
-  accessToken: string;
-}
-
-function Home({ onLocationSearch, onOpenViewer, accessToken }: HomeProps) {
+export function Home() {
+  const { onLocationSearch, onOpenViewer } = useAppShell();
+  const trpc = useTRPC();
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
   const [locationData, setLocationData] = useState<LocationInfo | null>(null);
-  const getLocationInfo = trpc.location.getInfo.useMutation();
+  const getLocationInfo = useMutation(trpc.location.getInfo.mutationOptions());
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!search.trim()) return;
 
-    // Validate search input
-    const sanitizedSearch = search.trim();
-    if (sanitizedSearch.length > 200) {
-      console.error('Search query too long');
-      return;
-    }
-    if (!/^[a-zA-Z0-9\s,.-]+$/.test(sanitizedSearch)) {
-      console.error('Invalid characters in search query');
-      return;
-    }
-
     setLoading(true);
     try {
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(sanitizedSearch)}.json?access_token=${accessToken}`
-      );
-      const data: MapboxResponse = await response.json();
-      
-      if (data.features && data.features.length > 0) {
-        const [lng, lat] = data.features[0].center;
-        onLocationSearch(lng, lat);
-        const result = await getLocationInfo.mutateAsync({ lat, lng });
-        setLocationData(result);
+      const result = await geocodeLocation(search);
+
+      if (result) {
+        onLocationSearch(result.lng, result.lat);
+        const locationInfo = await getLocationInfo.mutateAsync({ lat: result.lat, lng: result.lng });
+        setLocationData(locationInfo);
       }
     } catch (error) {
       console.error('Search failed:', error);
@@ -83,7 +68,7 @@ function Home({ onLocationSearch, onOpenViewer, accessToken }: HomeProps) {
       {locationData && (
         <div className="mt-6 space-y-4">
           <AirQualityWidget aqi={locationData.aqi} pm10={locationData.pm10} pm25={locationData.pm25} />
-          <CountryWidget 
+          <CountryWidget
             countryName={locationData.countryName}
             countryCapital={locationData.countryCapital}
             countryPopulation={locationData.countryPopulation}
@@ -99,5 +84,3 @@ function Home({ onLocationSearch, onOpenViewer, accessToken }: HomeProps) {
     </div>
   );
 }
-
-export default Home;

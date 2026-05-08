@@ -14,22 +14,24 @@
 
 ## About
 
-This demo is using [Mapbox](https://www.mapbox.com/), [React](), [Tailwind CSS](https://tailwindcss.com/), [Node.js](https://tailwindcss.com/), [tRPC](https://trpc.io/), [Drizzle ORM](https://orm.drizzle.team/), [PostgreSQL](https://www.postgresql.org/) and [Redis](https://redis.io/) to build a full-stack location search application with interactive map.
+This demo is using [Mapbox](https://www.mapbox.com/), [Next.js](https://nextjs.org/) (App Router with SSR), [React](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/), [Node.js](https://nodejs.org/), [tRPC](https://trpc.io/) v11, [Drizzle ORM](https://orm.drizzle.team/), [PostgreSQL](https://www.postgresql.org/) and [Redis](https://redis.io/) to build a full-stack location search application with interactive map.
+
+The frontend uses server-side rendering to keep the Mapbox access token on the server. Geocoding requests are handled via Next.js server actions, so the token is never exposed in client-side API calls.
 
 ## Structure
 
-### Front
-- `/`: Home page with location search
+### Front (Next.js App Router)
+- `/`: Home page with location search (geocoding via server action)
 - `/feedback`: Feedback list
 - `/feedback/new`: Create new feedback
 - `/feedback/:id/edit`: Edit existing feedback
 
-### Back
+### Back (Express + tRPC)
 - `feedback.list`: List all feedback
 - `feedback.create`: Create new feedback
 - `feedback.update`: Update existing feedback
 - `feedback.delete`: Delete feedback
-- `getMapboxToken`: Returns Mapbox access token
+- `getMapboxToken`: Returns Mapbox access token (legacy, unused by SSR frontend)
 - `location.getInfo`: Fetches location data (weather, air quality, Wikipedia, country info, World Bank data)
 
 ## Prerequisites
@@ -70,7 +72,7 @@ npm test
 ```
 
 ## Services
-- Frontend: http://localhost:3000 (React + Vite)
+- Frontend: http://localhost:3000 (Next.js SSR)
 - Backend: http://localhost:3001 (Express + tRPC)
 - PostgreSQL: `localhost:5432` (Database)
 - Redis: `localhost:6379` (Cache)

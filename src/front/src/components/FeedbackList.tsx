@@ -1,15 +1,24 @@
-import { trpc } from '../trpc';
-import { Link } from 'react-router-dom';
+'use client';
 
-function FeedbackList() {
-  const { data: feedbackList, isLoading } = trpc.feedback.list.useQuery();
-  const deleteMutation = trpc.feedback.delete.useMutation();
-  const utils = trpc.useContext();
+import Link from 'next/link';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTRPC } from '@/lib/trpc';
+
+export function FeedbackList() {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const { data: feedbackList, isLoading } = useQuery(trpc.feedback.list.queryOptions());
+  const deleteMutation = useMutation(
+    trpc.feedback.delete.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: trpc.feedback.list.queryKey() });
+      },
+    })
+  );
 
   const handleDelete = async (id: number) => {
     try {
       await deleteMutation.mutateAsync({ id });
-      utils.feedback.list.invalidate();
     } catch (error) {
       console.error('Failed to delete feedback:', error);
     }
@@ -21,7 +30,7 @@ function FeedbackList() {
     <div>
       <div className="flex justify-between items-center mb-6 bg-bg-secondary p-4 rounded-lg">
         <h1>Feedback</h1>
-        <Link to="/feedback/new" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        <Link href="/feedback/new" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
           New
         </Link>
       </div>
@@ -31,11 +40,11 @@ function FeedbackList() {
             <h2 className="text-lg font-semibold mb-2">{item.title}</h2>
             <p className="text-text-secondary text-sm mb-3">{item.description}</p>
             <div className="flex gap-2">
-              <Link to={`/feedback/${item.id}/edit`} className="text-blue-500 text-sm hover:underline">
+              <Link href={`/feedback/${item.id}/edit`} className="text-blue-500 text-sm hover:underline">
                 Edit
               </Link>
-              <button 
-                onClick={() => handleDelete(item.id)} 
+              <button
+                onClick={() => handleDelete(item.id)}
                 disabled={deleteMutation.isPending}
                 className="text-red-500 text-sm hover:underline disabled:opacity-50"
               >
@@ -48,5 +57,3 @@ function FeedbackList() {
     </div>
   );
 }
-
-export default FeedbackList;
