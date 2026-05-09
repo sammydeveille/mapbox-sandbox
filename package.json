@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Location search app using Mapbox, React and Node.js",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "audit": "cd src/back && npm audit --production && cd ../front && npm audit --production",
