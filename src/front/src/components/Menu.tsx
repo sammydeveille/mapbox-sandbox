@@ -12,7 +12,7 @@ export function Menu({ darkMode, onToggleDarkMode }: MenuProps) {
     <nav className="bg-bg-secondary text-text-primary p-4 flex justify-between items-center">
       <div className="flex gap-4">
         <Link href="/" className="hover:underline">Home</Link>
-        <Link href="/feedback" className="hover:underline">Feedback</Link>
+        <Link href="/collections" className="hover:underline">Collections</Link>
       </div>
       <button
         onClick={onToggleDarkMode}

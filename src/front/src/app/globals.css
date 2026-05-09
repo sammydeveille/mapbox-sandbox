@@ -2,7 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'mapbox-gl/dist/mapbox-gl.css';
+
 @layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
   :root {
     --color-bg-primary: 255 255 255;
     --color-bg-secondary: 245 245 245;

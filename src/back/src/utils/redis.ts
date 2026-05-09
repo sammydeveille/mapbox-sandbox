@@ -18,4 +18,16 @@ export const getRedis = async () => {
 export const redis = {
   get: async (key: string) => (await getRedis()).get(key),
   setEx: async (key: string, seconds: number, value: string) => (await getRedis()).setEx(key, seconds, value),
+  del: async (key: string | string[]) => {
+    const client = await getRedis();
+    if (Array.isArray(key)) {
+      if (key.length === 0) return 0;
+      return client.del(key);
+    }
+    return client.del(key);
+  },
+  scan: async (cursor: string, options: { MATCH: string; COUNT: number }) => {
+    const client = await getRedis();
+    return client.scan(cursor, options);
+  },
 };
