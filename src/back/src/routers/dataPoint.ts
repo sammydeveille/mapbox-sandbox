@@ -32,8 +32,20 @@ export const dataPointRouter = t.router({
   query: procedure
     .input(spatialTemporalQuerySchema)
     .query(async ({ input }) => {
+      type QueryResult = {
+        id: string;
+        layerId: string;
+        geometry: unknown;
+        timestamp: Date;
+        temporalPrecision: string;
+        value: number;
+        metadata: unknown;
+        mediaUrl: string | null;
+        createdAt: Date;
+      }[];
+
       const cacheKey = buildCacheKey(input);
-      const cached = await getCached(cacheKey);
+      const cached = await getCached<QueryResult>(cacheKey);
       if (cached) return cached;
 
       // Build query conditions

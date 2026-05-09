@@ -1,6 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
-import { feedback } from '../src/db/schema';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -20,12 +19,6 @@ const pool = new Pool({
 });
 
 const db = drizzle(pool);
-
-const data = JSON.parse(readFileSync(join(dir, '../data/pg.json'), 'utf-8'));
-
-for (const item of data.feedback) {
-  await db.insert(feedback).values(item);
-}
 
 console.log('Database seeded');
 process.exit(0);
