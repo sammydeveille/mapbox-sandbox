@@ -1,6 +1,6 @@
 # Mapbox / Location Search Demo
 
-[![Code Checks](https://github.com/sammydeveille/mapbox-sandbox/actions/workflows/ci.yml/badge.svg)](https://github.com/sammydeveille/mapbox-sandbox/actions/workflows/ci.yml)
+[![CI](https://github.com/sammydeveille/mapbox-sandbox/actions/workflows/ci.yml/badge.svg)](https://github.com/sammydeveille/mapbox-sandbox/actions/workflows/ci.yml)
 
 ![Screenshot](doc/screenshot.png)
 
