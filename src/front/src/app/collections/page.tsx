@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { Suspense, useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useProfile } from '@/hooks/useProfile';
@@ -21,6 +21,14 @@ import type mapboxgl from 'mapbox-gl';
 type ImportTab = 'data' | 'csv' | 'geojson' | 'api' | 'manual';
 
 export default function CollectionsPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+      <CollectionsContent />
+    </Suspense>
+  );
+}
+
+function CollectionsContent() {
   const { profileId } = useProfile();
   const { darkMode, toggle: toggleDarkMode } = useDarkMode();
   const trpc = useTRPC();
