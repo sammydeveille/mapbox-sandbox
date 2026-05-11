@@ -18,22 +18,6 @@ This demo is using [Mapbox](https://www.mapbox.com/), [Next.js](https://nextjs.o
 
 The frontend uses server-side rendering to keep the Mapbox access token on the server. Geocoding requests are handled via Next.js server actions, so the token is never exposed in client-side API calls.
 
-## Structure
-
-### Front (Next.js App Router)
-- `/`: Home page with location search (geocoding via server action)
-- `/feedback`: Feedback list
-- `/feedback/new`: Create new feedback
-- `/feedback/:id/edit`: Edit existing feedback
-
-### Back (Express + tRPC)
-- `feedback.list`: List all feedback
-- `feedback.create`: Create new feedback
-- `feedback.update`: Update existing feedback
-- `feedback.delete`: Delete feedback
-- `getMapboxToken`: Returns Mapbox access token (legacy, unused by SSR frontend)
-- `location.getInfo`: Fetches location data (weather, air quality, Wikipedia, country info, World Bank data)
-
 ## Prerequisites
 
 - [Docker](https://www.docker.com)
