@@ -45,8 +45,8 @@ async function main() {
   // --- Layer 1: Points (temperature sensors) ---
   const pointLayerId = 'b0000000-0000-0000-0000-000000000001';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'globe') ON CONFLICT (id) DO NOTHING`,
     [pointLayerId, collectionId, 'Temperature Sensors', 'point']
   );
 
@@ -77,8 +77,8 @@ async function main() {
   // --- Layer 2: Heatmap (air quality readings) ---
   const heatmapLayerId = 'b0000000-0000-0000-0000-000000000002';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'globe') ON CONFLICT (id) DO NOTHING`,
     [heatmapLayerId, collectionId, 'Air Quality Index', 'heatmap']
   );
 
@@ -105,8 +105,8 @@ async function main() {
   // --- Layer 3: Route (delivery truck path) ---
   const routeLayerId = 'b0000000-0000-0000-0000-000000000003';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'globe') ON CONFLICT (id) DO NOTHING`,
     [routeLayerId, collectionId, 'Delivery Route', 'route']
   );
 
@@ -135,8 +135,8 @@ async function main() {
   // --- Layer 4: Clusters (bike docking stations) ---
   const clusterLayerId = 'b0000000-0000-0000-0000-000000000004';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'globe') ON CONFLICT (id) DO NOTHING`,
     [clusterLayerId, collectionId, 'Bike Stations', 'cluster']
   );
 
@@ -162,8 +162,8 @@ async function main() {
   // --- Layer 5: Choropleth (borough noise levels) ---
   const choroplethLayerId = 'b0000000-0000-0000-0000-000000000005';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'globe') ON CONFLICT (id) DO NOTHING`,
     [choroplethLayerId, collectionId, 'Noise Levels', 'choropleth']
   );
 

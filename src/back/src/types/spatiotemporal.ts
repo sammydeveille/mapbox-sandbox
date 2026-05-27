@@ -67,11 +67,36 @@ export const updateCollectionSchema = z.object({
 });
 export type UpdateCollection = z.infer<typeof updateCollectionSchema>;
 
+export const projectionSchema = z.enum(['globe', 'mercator']);
+export type Projection = z.infer<typeof projectionSchema>;
+
+export const sourceModeSchema = z.enum(['data_points', 'knowledge_items']);
+export type SourceMode = z.infer<typeof sourceModeSchema>;
+
+export const itemTypeSchema = z.enum(['article', 'event', 'statistic', 'concept', 'place']);
+export type ItemType = z.infer<typeof itemTypeSchema>;
+
+export const itemFilterSchema = z.object({
+  itemTypes: z.array(itemTypeSchema).optional(),
+  temporalStart: z.string().datetime().optional(),
+  temporalEnd: z.string().datetime().optional(),
+  spatialBounds: z.tuple([
+    z.number().min(-180).max(180), // west
+    z.number().min(-90).max(90),   // south
+    z.number().min(-180).max(180), // east
+    z.number().min(-90).max(90),   // north
+  ]).optional(),
+}).optional();
+export type ItemFilter = z.infer<typeof itemFilterSchema>;
+
 export const createDataLayerSchema = z.object({
   collectionId: z.string().uuid(),
   name: z.string().min(1).max(255),
   renderType: renderTypeSchema,
+  projection: projectionSchema.optional(),
   schemaHint: z.record(z.unknown()).optional(),
+  sourceMode: sourceModeSchema.default('data_points').optional(),
+  itemFilter: itemFilterSchema,
 });
 export type CreateDataLayer = z.infer<typeof createDataLayerSchema>;
 

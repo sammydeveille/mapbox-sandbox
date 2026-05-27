@@ -12,6 +12,7 @@
     "db:seed:demo": "tsx script/seed-demo.ts",
     "db:seed:global": "tsx script/seed-global.ts",
     "db:seed:history": "tsx script/seed-history.ts",
+    "db:seed:knowledge": "tsx script/seed-knowledge.ts",
     "db:seed:owid": "tsx script/seed-owid.ts",
     "db:studio": "drizzle-kit studio",
     "db:sync": "drizzle-kit push",

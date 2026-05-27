@@ -206,10 +206,10 @@ async function main() {
 async function seedPopulation(client: pg.Client, rows: Record<string, string>[]) {
   const layerId = 'f0000000-0000-0000-0000-000000000010';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type, schema_hint)
-     VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection, schema_hint)
+     VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING`,
     [layerId, COLLECTION_ID, 'Population', 'heatmap',
-      JSON.stringify({ unit: 'millions', source: 'OWID/co2-data' })]
+      'mercator', JSON.stringify({ unit: 'millions', source: 'OWID/co2-data' })]
   );
 
   let count = 0;
@@ -240,10 +240,10 @@ async function seedPopulation(client: pg.Client, rows: Record<string, string>[])
 async function seedGDP(client: pg.Client, rows: Record<string, string>[]) {
   const layerId = 'f0000000-0000-0000-0000-000000000020';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type, schema_hint)
-     VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection, schema_hint)
+     VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING`,
     [layerId, COLLECTION_ID, 'GDP per Capita', 'choropleth',
-      JSON.stringify({ unit: 'international $ (2011 PPP)', source: 'OWID/co2-data' })]
+      'mercator', JSON.stringify({ unit: 'international $ (2011 PPP)', source: 'OWID/co2-data' })]
   );
 
   let count = 0;
@@ -284,10 +284,10 @@ async function seedGDP(client: pg.Client, rows: Record<string, string>[]) {
 async function seedLifeExpectancy(client: pg.Client, rows: Record<string, string>[]) {
   const layerId = 'f0000000-0000-0000-0000-000000000030';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type, schema_hint)
-     VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection, schema_hint)
+     VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING`,
     [layerId, COLLECTION_ID, 'Life Expectancy', 'point',
-      JSON.stringify({ unit: 'years', source: 'OWID/co2-data (via World Bank)' })]
+      'mercator', JSON.stringify({ unit: 'years', source: 'OWID/co2-data (via World Bank)' })]
   );
 
   // OWID co2-data doesn't include life expectancy directly.
@@ -382,10 +382,10 @@ async function seedLifeExpectancy(client: pg.Client, rows: Record<string, string
 async function seedCO2(client: pg.Client, rows: Record<string, string>[]) {
   const layerId = 'f0000000-0000-0000-0000-000000000040';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type, schema_hint)
-     VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection, schema_hint)
+     VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING`,
     [layerId, COLLECTION_ID, 'CO₂ Emissions', 'cluster',
-      JSON.stringify({ unit: 'million tonnes', source: 'OWID/co2-data' })]
+      'mercator', JSON.stringify({ unit: 'million tonnes', source: 'OWID/co2-data' })]
   );
 
   let count = 0;

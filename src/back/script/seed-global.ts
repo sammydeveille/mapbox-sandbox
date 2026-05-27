@@ -42,8 +42,8 @@ async function main() {
   // --- Layer 1: Earthquakes (point) - magnitude as value ---
   const quakeLayerId = 'c0000000-0000-0000-0000-000000000001';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'mercator') ON CONFLICT (id) DO NOTHING`,
     [quakeLayerId, collectionId, 'Earthquakes M5+', 'point']
   );
 
@@ -76,8 +76,8 @@ async function main() {
   // --- Layer 2: Ocean Surface Temperature (heatmap) ---
   const oceanLayerId = 'c0000000-0000-0000-0000-000000000002';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'mercator') ON CONFLICT (id) DO NOTHING`,
     [oceanLayerId, collectionId, 'Ocean Surface Temp', 'heatmap']
   );
 
@@ -117,8 +117,8 @@ async function main() {
   // --- Layer 3: International Flight Route (route) ---
   const flightLayerId = 'c0000000-0000-0000-0000-000000000003';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'mercator') ON CONFLICT (id) DO NOTHING`,
     [flightLayerId, collectionId, 'Round-the-World Flight', 'route']
   );
 
@@ -151,8 +151,8 @@ async function main() {
   // --- Layer 4: Volcanic Activity (cluster) ---
   const volcanoLayerId = 'c0000000-0000-0000-0000-000000000004';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'mercator') ON CONFLICT (id) DO NOTHING`,
     [volcanoLayerId, collectionId, 'Active Volcanoes', 'cluster']
   );
 
@@ -212,8 +212,8 @@ async function main() {
   // --- Layer 5: Climate Zones (choropleth) ---
   const climateLayerId = 'c0000000-0000-0000-0000-000000000005';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type)
-     VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection)
+     VALUES ($1, $2, $3, $4, 'mercator') ON CONFLICT (id) DO NOTHING`,
     [climateLayerId, collectionId, 'CO₂ by Region', 'choropleth']
   );
 

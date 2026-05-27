@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from '@/components/Providers';
+import { MapShellWrapper } from '@/components/MapShellWrapper';
 
 export const metadata: Metadata = {
   title: 'Mapbox Demo',
@@ -12,10 +13,22 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const mapboxToken = process.env.MAPBOX_ACCESS_TOKEN ?? '';
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {mapboxToken ? (
+            <MapShellWrapper mapboxToken={mapboxToken}>
+              {children}
+            </MapShellWrapper>
+          ) : (
+            <div className="flex items-center justify-center h-screen text-red-500">
+              MAPBOX_ACCESS_TOKEN is not configured
+            </div>
+          )}
+        </Providers>
       </body>
     </html>
   );

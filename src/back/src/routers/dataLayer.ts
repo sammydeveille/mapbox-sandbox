@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { procedure, t } from '../trpc.js';
-import { createDataLayerSchema, renderTypeSchema } from '../types/spatiotemporal.js';
+import { createDataLayerSchema, renderTypeSchema, projectionSchema, sourceModeSchema, itemFilterSchema } from '../types/spatiotemporal.js';
 import { db } from '../db/index.js';
 import { collection, dataLayer } from '../db/schema.js';
 import { eq } from 'drizzle-orm';
@@ -74,7 +74,10 @@ export const dataLayerRouter = t.router({
         collectionId: layerData.collectionId,
         name: layerData.name,
         renderType: layerData.renderType,
+        projection: layerData.projection ?? 'globe',
         schemaHint: layerData.schemaHint ?? null,
+        sourceMode: layerData.sourceMode ?? 'data_points',
+        itemFilter: layerData.itemFilter ?? null,
       }).returning();
       return result;
     }),
@@ -84,6 +87,9 @@ export const dataLayerRouter = t.router({
       id: z.string().uuid(),
       name: z.string().min(1).max(255).optional(),
       renderType: renderTypeSchema.optional(),
+      projection: projectionSchema.optional(),
+      sourceMode: sourceModeSchema.optional(),
+      itemFilter: itemFilterSchema,
       ownerId: z.string().uuid(),
     }))
     .mutation(async ({ input }) => {

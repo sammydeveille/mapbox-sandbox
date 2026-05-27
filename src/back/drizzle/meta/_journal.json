@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1771964921372,
-      "tag": "0000_add_feedback",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1771964921373,
-      "tag": "0001_add_spatiotemporal",
+      "when": 1779217642952,
+      "tag": "0000_init",
       "breakpoints": true
     }
   ]
