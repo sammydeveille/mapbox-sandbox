@@ -10,6 +10,7 @@ interface WikiSearchResult {
   title: string;
   snippet: string;
   url: string;
+  coordinates?: { lng: number; lat: number; type?: string; dim?: number };
 }
 
 interface WikiPageContent {
@@ -18,6 +19,7 @@ interface WikiPageContent {
   extract: string;
   url: string;
   thumbnail?: string;
+  coordinates?: { lng: number; lat: number; type?: string; dim?: number };
 }
 
 export const wikipediaRouter = t.router({
@@ -58,6 +60,39 @@ export const wikipediaRouter = t.router({
         url: `https://en.wikipedia.org/wiki/${encodeURIComponent(item.title.replace(/ /g, '_'))}`,
       }));
 
+      // Batch-fetch coordinates for all result page IDs
+      if (results.length > 0) {
+        const pageIds = results.map((r) => r.pageId).join('|');
+        const coordParams = new URLSearchParams({
+          action: 'query',
+          pageids: pageIds,
+          prop: 'coordinates',
+          coprop: 'type|dim|globe',
+          format: 'json',
+          origin: '*',
+        });
+        try {
+          const coordResponse = await fetch(`https://en.wikipedia.org/w/api.php?${coordParams}`);
+          if (coordResponse.ok) {
+            const coordData = await coordResponse.json();
+            const pages = coordData.query?.pages || {};
+            for (const result of results) {
+              const page = pages[String(result.pageId)];
+              if (page?.coordinates?.[0]) {
+                result.coordinates = {
+                  lat: page.coordinates[0].lat,
+                  lng: page.coordinates[0].lon,
+                  type: page.coordinates[0].type || undefined,
+                  dim: page.coordinates[0].dim ? Number(page.coordinates[0].dim) : undefined,
+                };
+              }
+            }
+          }
+        } catch (e) {
+          log.debug('[API] Failed to fetch coordinates, continuing without them');
+        }
+      }
+
       await redis.setEx(cacheKey, CACHE_TTL, JSON.stringify(results));
       return results;
     }),
@@ -80,7 +115,8 @@ export const wikipediaRouter = t.router({
       const params = new URLSearchParams({
         action: 'query',
         pageids: String(input.pageId),
-        prop: 'extracts|pageimages',
+        prop: 'extracts|pageimages|coordinates',
+        coprop: 'type|dim|globe',
         exintro: '0',
         explaintext: '1',
         exsectionformat: 'plain',
@@ -107,6 +143,9 @@ export const wikipediaRouter = t.router({
         extract: page.extract || '',
         url: `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, '_'))}`,
         thumbnail: page.thumbnail?.source,
+        coordinates: page.coordinates?.[0]
+          ? { lat: page.coordinates[0].lat, lng: page.coordinates[0].lon, type: page.coordinates[0].type || undefined, dim: page.coordinates[0].dim ? Number(page.coordinates[0].dim) : undefined }
+          : undefined,
       };
 
       await redis.setEx(cacheKey, CACHE_TTL, JSON.stringify(result));

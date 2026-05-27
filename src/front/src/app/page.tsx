@@ -17,7 +17,6 @@ import { ManualEntry } from '@/components/import/ManualEntry';
 import { DataView } from '@/components/import/DataView';
 import { SearchView } from '@/components/SearchView';
 import { SearchDetailView } from '@/components/SearchDetailView';
-import { geocodeLocation } from '@/app/actions';
 import { KnowledgeSearchPanel } from '@/components/knowledge/KnowledgeSearchPanel';
 import { KnowledgeDetailView } from '@/components/knowledge/KnowledgeDetailView';
 import { PresentationList } from '@/components/presentation/PresentationList';
@@ -440,40 +439,40 @@ function HomeContent() {
               <SearchView
                 query={wikiQuery}
                 selectedPageId={detailView?.type === 'search-detail' ? detailView.pageId : null}
-                onSelectResult={async (pageId, title) => {
+                onSelectResult={(pageId, title, coordinates) => {
                   setDetailView({ type: 'search-detail', pageId, title });
                   // Remove previous marker immediately
                   if (searchMarkerRef.current) {
                     searchMarkerRef.current.remove();
                     searchMarkerRef.current = null;
                   }
-                  // Geocode the selected result and fly to it
-                  try {
-                    const result = await geocodeLocation(title);
-                    if (result) {
-                      flyTo(result.lng, result.lat);
-                      // Place marker after flyTo animation completes
-                      setTimeout(() => {
-                        if (!map) return;
-                        import('mapbox-gl').then((mapboxgl) => {
-                          const el = document.createElement('div');
-                          el.style.width = '14px';
-                          el.style.height = '14px';
-                          el.style.borderRadius = '50%';
-                          el.style.border = '2.5px solid';
-                          el.style.borderColor = document.documentElement.classList.contains('dark') ? '#fff' : '#1f2937';
-                          el.style.backgroundColor = document.documentElement.classList.contains('dark') ? 'rgba(255,255,255,0.15)' : 'rgba(31,41,55,0.1)';
-                          el.style.boxShadow = '0 0 0 4px rgba(59,130,246,0.3)';
+                  // Only fly to location if coordinates are available
+                  if (coordinates) {
+                    // Pick zoom level based on geographic type/dimension
+                    const zoom = getZoomForCoordinates(coordinates);
+                    // Defer flyTo to let padding change settle first
+                    setTimeout(() => {
+                      flyTo(coordinates.lng, coordinates.lat, zoom);
+                    }, 150);
+                    // Place marker after flyTo animation completes
+                    setTimeout(() => {
+                      if (!map) return;
+                      import('mapbox-gl').then((mapboxgl) => {
+                        const el = document.createElement('div');
+                        el.style.width = '14px';
+                        el.style.height = '14px';
+                        el.style.borderRadius = '50%';
+                        el.style.border = '2.5px solid';
+                        el.style.borderColor = document.documentElement.classList.contains('dark') ? '#fff' : '#1f2937';
+                        el.style.backgroundColor = document.documentElement.classList.contains('dark') ? 'rgba(255,255,255,0.15)' : 'rgba(31,41,55,0.1)';
+                        el.style.boxShadow = '0 0 0 4px rgba(59,130,246,0.3)';
 
-                          const marker = new mapboxgl.default.Marker({ element: el })
-                            .setLngLat([result.lng, result.lat])
-                            .addTo(map);
-                          searchMarkerRef.current = marker;
-                        });
-                      }, 3100);
-                    }
-                  } catch (error) {
-                    console.error('Geocode failed:', error);
+                        const marker = new mapboxgl.default.Marker({ element: el })
+                          .setLngLat([coordinates.lng, coordinates.lat])
+                          .addTo(map);
+                        searchMarkerRef.current = marker;
+                      });
+                    }, 3250);
                   }
                 }}
               />
@@ -525,7 +524,7 @@ function HomeContent() {
       {detailView && (
         <aside
           onWheel={handleSidebarWheel}
-          className="absolute top-3 right-3 bottom-3 z-30 w-[420px] flex flex-col rounded-2xl shadow-2xl bg-bg-secondary/80 backdrop-blur-md overflow-hidden"
+          className="absolute top-3 right-3 z-30 w-[420px] max-h-[calc(100vh-24px)] flex flex-col rounded-2xl shadow-2xl bg-bg-secondary/80 backdrop-blur-md overflow-hidden"
         >
           {/* Close button */}
           <div className="flex items-center justify-between px-3 pt-3 pb-1 flex-shrink-0">
@@ -691,6 +690,38 @@ function NavSection({
       {expanded && <div className="space-y-0.5">{children}</div>}
     </div>
   );
+}
+
+/**
+ * Determines appropriate zoom level based on Wikipedia coordinate metadata.
+ * Uses the `type` field (city, country, landmark, etc.) and `dim` (dimension in meters).
+ */
+function getZoomForCoordinates(coords: { type?: string; dim?: number }): number {
+  // If dimension is available, derive zoom from it (dim = approximate extent in meters)
+  if (coords.dim) {
+    if (coords.dim >= 1_000_000) return 4;   // continent/large country
+    if (coords.dim >= 300_000) return 4;     // country
+    if (coords.dim >= 100_000) return 5;     // large region/state
+    if (coords.dim >= 30_000) return 8;      // region/metro area
+    if (coords.dim >= 10_000) return 10;     // city
+    if (coords.dim >= 1_000) return 13;      // neighborhood
+    return 15;                                // landmark/building
+  }
+
+  // Fall back to type-based zoom
+  switch (coords.type) {
+    case 'country': return 4;
+    case 'adm1st': return 5;       // first-level admin (state/province)
+    case 'adm2nd': return 8;       // second-level admin (county)
+    case 'city': return 10;
+    case 'airport': return 12;
+    case 'mountain': return 11;
+    case 'isle': return 8;
+    case 'waterbody': return 7;
+    case 'landmark': return 14;
+    case 'edu': return 14;
+    default: return 10;
+  }
 }
 
 function PresentationNavList({

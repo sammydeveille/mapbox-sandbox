@@ -6,7 +6,7 @@ import { useTRPC } from '@/lib/trpc';
 interface SearchViewProps {
   query: string;
   selectedPageId?: number | null;
-  onSelectResult?: (pageId: number, title: string) => void;
+  onSelectResult?: (pageId: number, title: string, coordinates?: { lng: number; lat: number; type?: string; dim?: number }) => void;
 }
 
 export function SearchView({ query, selectedPageId, onSelectResult }: SearchViewProps) {
@@ -29,7 +29,7 @@ export function SearchView({ query, selectedPageId, onSelectResult }: SearchView
         {results?.map((item) => (
           <button
             key={item.pageId}
-            onClick={() => onSelectResult?.(item.pageId, item.title)}
+            onClick={() => onSelectResult?.(item.pageId, item.title, item.coordinates)}
             className={`w-full text-left px-3 py-2 rounded-lg transition-colors group ${
               selectedPageId === item.pageId
                 ? 'bg-blue-500/15 ring-1 ring-blue-500/30'
@@ -42,8 +42,11 @@ export function SearchView({ query, selectedPageId, onSelectResult }: SearchView
                 : 'text-text-primary group-hover:text-blue-600 dark:group-hover:text-blue-400'
             }`}>
               {item.title}
+              {item.coordinates && (
+                <span className="inline-block ml-1.5 text-[10px] opacity-60 align-middle" title="Has location">📍</span>
+              )}
             </p>
-            <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">
+            <p className="text-xs text-text-secondary mt-0.5 line-clamp-3">
               {item.snippet}
             </p>
           </button>

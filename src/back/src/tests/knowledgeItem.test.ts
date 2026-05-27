@@ -360,7 +360,7 @@ describe('Knowledge Item Router', () => {
       const knowledgeItemId = '550e8400-e29b-41d4-a716-446655440010';
       const polygon = {
         type: 'Polygon' as const,
-        coordinates: [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]],
+        coordinates: [[[0, 0], [1, 0], [1, 1], [0, 1], [0, 0]]] as [number, number][][],
       };
 
       const createdPlace = {
