@@ -28,6 +28,8 @@ interface MapShellContextValue {
   setMapPadding: (padding: { left?: number; right?: number; top?: number; bottom?: number }) => void;
   stopIdleRotation: () => void;
   startIdleRotation: () => void;
+  geoFirst: boolean;
+  toggleGeoFirst: () => void;
 }
 
 const MapShellContext = createContext<MapShellContextValue>({
@@ -43,6 +45,8 @@ const MapShellContext = createContext<MapShellContextValue>({
   setMapPadding: () => {},
   stopIdleRotation: () => {},
   startIdleRotation: () => {},
+  geoFirst: true,
+  toggleGeoFirst: () => {},
 });
 
 export function useMapShell() {
@@ -63,6 +67,11 @@ export function MapShell({ mapboxToken, children }: MapShellProps) {
   const [projection, setProjection] = useState<Projection>('globe');
   const projectionRef = useRef<Projection>('globe');
   const [mapInfo, setMapInfo] = useState({ zoom: 0, pitch: 0, bearing: 0 });
+  const [geoFirst, setGeoFirst] = useState(true);
+
+  const toggleGeoFirst = useCallback(() => {
+    setGeoFirst((prev) => !prev);
+  }, []);
 
   // Idle rotation state
   const rotationRef = useRef<number | null>(null);
@@ -138,7 +147,7 @@ export function MapShell({ mapboxToken, children }: MapShellProps) {
       mapRef.current = map;
 
       map.on('load', () => {
-        map.setPadding({ left: 0, top: 0, right: 0, bottom: 0 });
+        map.setPadding({ left: 290, top: 0, right: 430, bottom: 0 });
         // Set projection after map is fully loaded
         map.setProjection(projection as any);
         setMapInstance(map);
@@ -243,10 +252,10 @@ export function MapShell({ mapboxToken, children }: MapShellProps) {
 
   const flyTo = (lng: number, lat: number, zoom = 10) => {
     stopIdleRotation();
-    mapRef.current?.flyTo({ center: [lng, lat], zoom, duration: 3000 });
+    mapRef.current?.flyTo({ center: [lng, lat], zoom, duration: 5000 });
   };
 
-  const mapPaddingRef = useRef({ left: 0, right: 0, top: 0, bottom: 0 });
+  const mapPaddingRef = useRef({ left: 290, right: 430, top: 0, bottom: 0 });
 
   const setMapPadding = useCallback((padding: { left?: number; right?: number; top?: number; bottom?: number }) => {
     mapPaddingRef.current = { ...mapPaddingRef.current, ...padding };
@@ -268,7 +277,7 @@ export function MapShell({ mapboxToken, children }: MapShellProps) {
   };
 
   return (
-    <MapShellContext.Provider value={{ map: mapInstance, darkMode, toggleDarkMode, projection, toggleProjection, setProjection: setProjectionValue, profileId, flyTo, fitBounds: fitBoundsHandler, setMapPadding, stopIdleRotation, startIdleRotation }}>
+    <MapShellContext.Provider value={{ map: mapInstance, darkMode, toggleDarkMode, projection, toggleProjection, setProjection: setProjectionValue, profileId, flyTo, fitBounds: fitBoundsHandler, setMapPadding, stopIdleRotation, startIdleRotation, geoFirst, toggleGeoFirst }}>
       <div className="h-screen relative text-text-primary overflow-hidden">
         {/* Persistent map */}
         <div ref={containerRef} className="absolute inset-0 z-0" />
@@ -282,6 +291,8 @@ export function MapShell({ mapboxToken, children }: MapShellProps) {
             projection={projection}
             onToggleProjection={toggleProjection}
             mapInfo={mapInfo}
+            geoFirst={geoFirst}
+            onToggleGeoFirst={toggleGeoFirst}
           />
         </div>
 

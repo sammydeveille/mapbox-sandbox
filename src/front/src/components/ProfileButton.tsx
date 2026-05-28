@@ -9,9 +9,11 @@ interface ProfileButtonProps {
   projection: 'globe' | 'mercator';
   onToggleProjection: () => void;
   mapInfo: { zoom: number; pitch: number; bearing: number };
+  geoFirst: boolean;
+  onToggleGeoFirst: () => void;
 }
 
-export function ProfileButton({ profileId, darkMode, onToggleDarkMode, projection, onToggleProjection, mapInfo }: ProfileButtonProps) {
+export function ProfileButton({ profileId, darkMode, onToggleDarkMode, projection, onToggleProjection, mapInfo, geoFirst, onToggleGeoFirst }: ProfileButtonProps) {
   const [open, setOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -89,6 +91,18 @@ export function ProfileButton({ profileId, darkMode, onToggleDarkMode, projectio
               <span className="flex-1">Dark Mode</span>
               <span className="text-xs px-2 py-0.5 rounded-full bg-bg-secondary text-text-secondary">
                 {darkMode ? 'On' : 'Off'}
+              </span>
+            </button>
+
+            {/* Geo-first search toggle */}
+            <button
+              onClick={onToggleGeoFirst}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-primary hover:bg-bg-secondary transition-colors text-left"
+            >
+              <span className="text-base">📍</span>
+              <span className="flex-1">Geo results first</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-bg-secondary text-text-secondary">
+                {geoFirst ? 'On' : 'Off'}
               </span>
             </button>
           </div>

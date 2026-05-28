@@ -37,7 +37,7 @@ export function SearchDetailView({ pageId }: SearchDetailViewProps) {
         <img
           src={pageContent.thumbnail}
           alt={pageContent.title}
-          className="w-full rounded-lg mb-3 object-cover max-h-40"
+          className="w-full rounded-lg mb-3 object-contain max-h-64"
         />
       )}
       <div className="text-xs text-text-primary leading-relaxed whitespace-pre-line">
