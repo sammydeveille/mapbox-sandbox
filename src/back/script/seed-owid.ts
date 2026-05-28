@@ -182,10 +182,10 @@ async function main() {
 async function seedCO2(client: pg.Client) {
   const layerId = 'e0000000-0000-0000-0000-000000000010';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type, schema_hint)
-     VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection, schema_hint)
+     VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING`,
     [layerId, COLLECTION_ID, 'CO₂ Emissions per Capita', 'choropleth',
-      JSON.stringify({ unit: 'tonnes per person', source: 'OWID/co2-data' })]
+      'mercator', JSON.stringify({ unit: 'tonnes per person', source: 'OWID/co2-data' })]
   );
 
   console.log('Layer: CO₂ Emissions per Capita (choropleth)');
@@ -235,10 +235,10 @@ async function seedCO2(client: pg.Client) {
 async function seedCovid(client: pg.Client) {
   const layerId = 'e0000000-0000-0000-0000-000000000020';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type, schema_hint)
-     VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection, schema_hint)
+     VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING`,
     [layerId, COLLECTION_ID, 'COVID-19 Daily New Cases', 'heatmap',
-      JSON.stringify({ unit: 'new cases per million', source: 'OWID/covid-19-data' })]
+      'mercator', JSON.stringify({ unit: 'new cases per million', source: 'OWID/covid-19-data' })]
   );
 
   console.log('Layer: COVID-19 Daily New Cases (heatmap)');
@@ -282,10 +282,10 @@ async function seedCovid(client: pg.Client) {
 async function seedEnergy(client: pg.Client) {
   const layerId = 'e0000000-0000-0000-0000-000000000030';
   await client.query(
-    `INSERT INTO data_layer (id, collection_id, name, render_type, schema_hint)
-     VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`,
+    `INSERT INTO data_layer (id, collection_id, name, render_type, projection, schema_hint)
+     VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING`,
     [layerId, COLLECTION_ID, 'Renewable Energy Share', 'cluster',
-      JSON.stringify({ unit: '% of primary energy', source: 'OWID/energy-data' })]
+      'mercator', JSON.stringify({ unit: '% of primary energy', source: 'OWID/energy-data' })]
   );
 
   console.log('Layer: Renewable Energy Share (cluster)');

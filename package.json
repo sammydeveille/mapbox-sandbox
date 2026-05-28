@@ -7,6 +7,7 @@
   },
   "scripts": {
     "audit": "cd src/back && npm audit --production && cd ../front && npm audit --production",
+    "cache:clear": "docker exec redis redis-cli FLUSHALL",
     "clean": "rm -rf src/back/node_modules src/front/node_modules",
     "db:create": "cd src/back && npm run db:create",
     "db:delete": "docker volume rm mapbox-sandbox_postgres_data",
@@ -20,7 +21,6 @@
     "log": "docker-compose -f infra/docker.yml logs -f",
     "log:back": "docker logs -f back",
     "log:front": "docker logs -f front",
-    "redis:flush": "docker exec redis redis-cli FLUSHALL",
     "start": "docker-compose --env-file .env -f infra/docker.yml up -d",
     "dev:back": "cd src/back && npm run dev",
     "dev:front": "cd src/front && npm run dev",

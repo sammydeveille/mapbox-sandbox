@@ -45,7 +45,8 @@ export function MapContainer({
 
       const map = new mapboxgl.default.Map({
         container: containerRef.current,
-        style: darkModeRef.current ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/streets-v12',
+        // style: darkModeRef.current ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/sdevmb/cmp7cewce001201sd1san66ux',
+        style: darkModeRef.current ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/sdevmb/cmp7cm53g006j01s608ct092m',
         center: initialCenter,
         zoom: initialZoom,
       });
@@ -98,7 +99,8 @@ export function MapContainer({
   // Switch map style when dark mode changes
   useEffect(() => {
     if (!mapRef.current) return;
-    const style = darkMode ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/mapbox/streets-v12';
+    // const style = darkMode ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/sdevmb/cmp7cewce001201sd1san66ux';
+    const style = darkMode ? 'mapbox://styles/mapbox/dark-v11' : 'mapbox://styles/sdevmb/cmp7cm53g006j01s608ct092m';
     mapRef.current.setStyle(style);
   }, [darkMode]);
 
