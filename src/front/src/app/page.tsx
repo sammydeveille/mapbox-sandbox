@@ -130,8 +130,26 @@ function HomeContent() {
     setDetailView((prev) => prev?.type === 'search-detail' && prev.pageId === pageId ? null : prev);
   }, [map, startIdleRotation, wikiQuery]);
 
-  // Select a pinned result — show detail and fly to it
+  // Select a pinned result — toggle: if already selected, deselect and fit all; otherwise select and fly to it
   const handleSelectPinned = useCallback((result: PinnedResult) => {
+    // If already selected, deselect and fit all pins
+    if (detailView?.type === 'search-detail' && detailView.pageId === result.pageId) {
+      setDetailView(null);
+      // Fit to all pinned results after a short delay
+      const withCoords = pinnedResults.filter((r) => r.coordinates);
+      if (withCoords.length >= 2) {
+        let west = 180, south = 90, east = -180, north = -90;
+        for (const r of withCoords) {
+          const { lng, lat } = r.coordinates!;
+          if (lng < west) west = lng;
+          if (lng > east) east = lng;
+          if (lat < south) south = lat;
+          if (lat > north) north = lat;
+        }
+        setTimeout(() => fitBounds([west, south, east, north]), 200);
+      }
+      return;
+    }
     setDetailView({ type: 'search-detail', pageId: result.pageId, title: result.title });
     if (result.coordinates) {
       const zoom = getZoomForCoordinates(result.coordinates);
@@ -145,7 +163,7 @@ function HomeContent() {
         selectedMarkerRef.current
       );
     }, 0);
-  }, [flyTo]);
+  }, [flyTo, fitBounds, detailView, pinnedResults]);
 
   // When a search result is selected: fly to it, show detail, and place a marker
   const handleSelectSearchResult = useCallback((pageId: number, title: string, coordinates?: { lng: number; lat: number; type?: string; dim?: number }) => {

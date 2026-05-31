@@ -4,8 +4,8 @@ import { Providers } from '@/components/Providers';
 import { MapShellWrapper } from '@/components/MapShellWrapper';
 
 export const metadata: Metadata = {
-  title: 'Mapbox Demo',
-  description: 'Location search application with interactive map',
+  title: 'Atlapse',
+  description: 'A spatiotemporal knowledge canvas — explore space and time through an interactive globe',
 };
 
 export default function RootLayout({
