@@ -30,6 +30,8 @@ interface MapShellContextValue {
   startIdleRotation: () => void;
   geoFirst: boolean;
   toggleGeoFirst: () => void;
+  mapLabels: boolean;
+  toggleMapLabels: () => void;
 }
 
 const MapShellContext = createContext<MapShellContextValue>({
@@ -47,6 +49,8 @@ const MapShellContext = createContext<MapShellContextValue>({
   startIdleRotation: () => {},
   geoFirst: true,
   toggleGeoFirst: () => {},
+  mapLabels: false,
+  toggleMapLabels: () => {},
 });
 
 export function useMapShell() {
@@ -68,9 +72,25 @@ export function MapShell({ mapboxToken, children }: MapShellProps) {
   const projectionRef = useRef<Projection>('globe');
   const [mapInfo, setMapInfo] = useState({ zoom: 0, pitch: 0, bearing: 0 });
   const [geoFirst, setGeoFirst] = useState(true);
+  const [mapLabels, setMapLabels] = useState(false);
 
   const toggleGeoFirst = useCallback(() => {
     setGeoFirst((prev) => !prev);
+  }, []);
+
+  const toggleMapLabels = useCallback(() => {
+    setMapLabels((prev) => {
+      const next = !prev;
+      if (mapRef.current && mapRef.current.isStyleLoaded()) {
+        const style = mapRef.current.getStyle();
+        for (const layer of style.layers) {
+          if (layer.type === 'symbol' && (layer.layout as any)?.['text-field']) {
+            mapRef.current.setLayoutProperty(layer.id, 'visibility', next ? 'visible' : 'none');
+          }
+        }
+      }
+      return next;
+    });
   }, []);
 
   // Idle rotation state
@@ -221,9 +241,18 @@ export function MapShell({ mapboxToken, children }: MapShellProps) {
       // Delay slightly to ensure style projection is fully applied before overriding
       setTimeout(() => {
         map.setProjection(projection as any);
+        // Re-apply label visibility after style reload
+        if (!mapLabels) {
+          const style = map.getStyle();
+          for (const layer of style.layers) {
+            if (layer.type === 'symbol' && (layer.layout as any)?.['text-field']) {
+              map.setLayoutProperty(layer.id, 'visibility', 'none');
+            }
+          }
+        }
       }, 100);
     });
-  }, [darkMode, projection]);
+  }, [darkMode, projection, mapLabels]);
 
   // Switch projection
   useEffect(() => {
@@ -277,7 +306,7 @@ export function MapShell({ mapboxToken, children }: MapShellProps) {
   };
 
   return (
-    <MapShellContext.Provider value={{ map: mapInstance, darkMode, toggleDarkMode, projection, toggleProjection, setProjection: setProjectionValue, profileId, flyTo, fitBounds: fitBoundsHandler, setMapPadding, stopIdleRotation, startIdleRotation, geoFirst, toggleGeoFirst }}>
+    <MapShellContext.Provider value={{ map: mapInstance, darkMode, toggleDarkMode, projection, toggleProjection, setProjection: setProjectionValue, profileId, flyTo, fitBounds: fitBoundsHandler, setMapPadding, stopIdleRotation, startIdleRotation, geoFirst, toggleGeoFirst, mapLabels, toggleMapLabels }}>
       <div className="h-screen relative text-text-primary overflow-hidden">
         {/* Persistent map */}
         <div ref={containerRef} className="absolute inset-0 z-0" />
@@ -293,6 +322,8 @@ export function MapShell({ mapboxToken, children }: MapShellProps) {
             mapInfo={mapInfo}
             geoFirst={geoFirst}
             onToggleGeoFirst={toggleGeoFirst}
+            mapLabels={mapLabels}
+            onToggleMapLabels={toggleMapLabels}
           />
         </div>
 

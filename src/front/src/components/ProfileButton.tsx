@@ -11,9 +11,11 @@ interface ProfileButtonProps {
   mapInfo: { zoom: number; pitch: number; bearing: number };
   geoFirst: boolean;
   onToggleGeoFirst: () => void;
+  mapLabels: boolean;
+  onToggleMapLabels: () => void;
 }
 
-export function ProfileButton({ profileId, darkMode, onToggleDarkMode, projection, onToggleProjection, mapInfo, geoFirst, onToggleGeoFirst }: ProfileButtonProps) {
+export function ProfileButton({ profileId, darkMode, onToggleDarkMode, projection, onToggleProjection, mapInfo, geoFirst, onToggleGeoFirst, mapLabels, onToggleMapLabels }: ProfileButtonProps) {
   const [open, setOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -103,6 +105,18 @@ export function ProfileButton({ profileId, darkMode, onToggleDarkMode, projectio
               <span className="flex-1">Geo results first</span>
               <span className="text-xs px-2 py-0.5 rounded-full bg-bg-secondary text-text-secondary">
                 {geoFirst ? 'On' : 'Off'}
+              </span>
+            </button>
+
+            {/* Map labels toggle */}
+            <button
+              onClick={onToggleMapLabels}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-primary hover:bg-bg-secondary transition-colors text-left"
+            >
+              <span className="text-base">🏷️</span>
+              <span className="flex-1">Map labels</span>
+              <span className="text-xs px-2 py-0.5 rounded-full bg-bg-secondary text-text-secondary">
+                {mapLabels ? 'On' : 'Off'}
               </span>
             </button>
           </div>
